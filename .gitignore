@@ -1,0 +1,6 @@
+*.drawio
+tutorial.md
+
+.venv
+.env
+.vscode
