@@ -1,6 +1,8 @@
 from flask import Flask
+from typing import Any, Callable
 
 
+builder = Callable[[Any], dict[Any, Any]]
 response = tuple[dict, int]
 app = Flask(__name__)
 USERS = [
@@ -26,11 +28,15 @@ def validate_id(id: int) -> bool:
     return isinstance(id, int) and (id > 0) and (id <= len(USERS))
 
 
-def build_response(fct: callable, arg: any, code: int) -> response:
-    return make_response(fct(arg), code)
+def build_response(fct: builder, arg: Any, code: int) -> response:
+    data = fct(arg)
+    return make_response(data, code)
 
 
 def get_response_validation(id: int) -> response:
+    code: int
+    fct: builder
+    arg: str | int
     if validate_id(id):
         fct = select_user_by_id
         arg = id
